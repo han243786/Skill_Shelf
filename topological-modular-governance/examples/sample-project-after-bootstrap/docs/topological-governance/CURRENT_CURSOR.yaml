@@ -1,0 +1,24 @@
+cursor_id: "CURSOR-0001"
+status: active
+work_mode_stack:
+  - mode: refactor
+    step: "sample backend route facade closeout"
+topology_slice:
+  parent_node: "sample.backend"
+  child_nodes:
+    - "sample.backend.routes"
+  changed_edges:
+    - "routes enter through sample.backend facade"
+allowed_workset:
+  editable_files:
+    - "docs/topological-governance"
+    - "src/backend"
+  readonly_files:
+    - "src"
+forbidden_operations:
+  - "sibling_direct_dependency_without_release_transition_exception"
+gates:
+  - "manual: sample route smoke passed"
+closeout_required: true
+next_action: "advance to sample.backend.state topology slice"
+handoff_notes: "Sample cursor for strict check."

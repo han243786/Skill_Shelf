@@ -16,6 +16,7 @@ $resolvedProject = Resolve-Path -LiteralPath $ProjectRoot
 $projectPath = $resolvedProject.ProviderPath
 $packageRoot = Split-Path -Parent $PSScriptRoot
 $templateRoot = Join-Path $packageRoot "templates"
+$schemaRoot = Join-Path $packageRoot "schemas"
 
 $templateMappings = @(
     @{ Source = "PROJECT_TOPOLOGY.md"; Dest = "$GovernanceRoot\PROJECT_TOPOLOGY.md" },
@@ -23,12 +24,27 @@ $templateMappings = @(
     @{ Source = "TOPOLOGY_TASK_CARD.md"; Dest = "$GovernanceRoot\TOPOLOGY_TASK_CARD.md" },
     @{ Source = "TOPOLOGY_MODULE_NODE.md"; Dest = "$GovernanceRoot\TOPOLOGY_MODULE_NODE.md" },
     @{ Source = "TOPOLOGY_CLOSEOUT.md"; Dest = "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md" },
-    @{ Source = "AI_START_PROMPT.md"; Dest = "$GovernanceRoot\AI_START_PROMPT.md" }
+    @{ Source = "AI_START_PROMPT.md"; Dest = "$GovernanceRoot\AI_START_PROMPT.md" },
+    @{ Source = "CURRENT_CURSOR.yaml"; Dest = "$GovernanceRoot\CURRENT_CURSOR.yaml" },
+    @{ Source = "TOPOLOGY_CURSOR.md"; Dest = "$GovernanceRoot\TOPOLOGY_CURSOR.md" },
+    @{ Source = "ASPECT_POLISH_CUTOVER.md"; Dest = "$GovernanceRoot\ASPECT_POLISH_CUTOVER.md" },
+    @{ Source = "RELEASE_TRANSITION_EXCEPTION.md"; Dest = "$GovernanceRoot\RELEASE_TRANSITION_EXCEPTION.md" }
 )
 
 $scriptMappings = @(
     @{ Source = (Join-Path $PSScriptRoot "check-topological-governance.ps1"); Dest = "tools\check-topological-governance.ps1" },
-    @{ Source = (Join-Path $PSScriptRoot "inventory-topology.ps1"); Dest = "tools\inventory-topology.ps1" }
+    @{ Source = (Join-Path $PSScriptRoot "inventory-topology.ps1"); Dest = "tools\inventory-topology.ps1" },
+    @{ Source = (Join-Path $PSScriptRoot "check-topology-cursor.ps1"); Dest = "tools\check-topology-cursor.ps1" },
+    @{ Source = (Join-Path $PSScriptRoot "check-topology-ledger.ps1"); Dest = "tools\check-topology-ledger.ps1" },
+    @{ Source = (Join-Path $PSScriptRoot "check-forbidden-sibling-edges.ps1"); Dest = "tools\check-forbidden-sibling-edges.ps1" }
+)
+
+$schemaMappings = @(
+    @{ Source = "project-topology.schema.json"; Dest = "$GovernanceRoot\schemas\project-topology.schema.json" },
+    @{ Source = "topology-task-card.schema.json"; Dest = "$GovernanceRoot\schemas\topology-task-card.schema.json" },
+    @{ Source = "topology-module-node.schema.json"; Dest = "$GovernanceRoot\schemas\topology-module-node.schema.json" },
+    @{ Source = "topology-closeout.schema.json"; Dest = "$GovernanceRoot\schemas\topology-closeout.schema.json" },
+    @{ Source = "topology-cursor.schema.json"; Dest = "$GovernanceRoot\schemas\topology-cursor.schema.json" }
 )
 
 function Copy-TopologyFile {
@@ -63,6 +79,22 @@ foreach ($mapping in $templateMappings) {
 
 foreach ($mapping in $scriptMappings) {
     Copy-TopologyFile -SourcePath $mapping.Source -DestPath (Join-Path $projectPath $mapping.Dest)
+}
+
+foreach ($mapping in $schemaMappings) {
+    Copy-TopologyFile -SourcePath (Join-Path $schemaRoot $mapping.Source) -DestPath (Join-Path $projectPath $mapping.Dest)
+}
+
+$ledgerPath = Join-Path $projectPath "$GovernanceRoot\topology-ledger.ndjson"
+if ((Test-Path -LiteralPath $ledgerPath) -and -not $Force) {
+    Write-Host "[skip] exists: $ledgerPath"
+} elseif ($DryRun) {
+    Write-Host "[dry-run] create empty ledger $ledgerPath"
+} else {
+    $ledgerDir = Split-Path -Parent $ledgerPath
+    New-Item -ItemType Directory -Force -Path $ledgerDir | Out-Null
+    Set-Content -Encoding UTF8 -LiteralPath $ledgerPath -Value ""
+    Write-Host "[ok] wrote: $ledgerPath"
 }
 
 Write-Host "Topological modular governance scaffold completed for $projectPath"

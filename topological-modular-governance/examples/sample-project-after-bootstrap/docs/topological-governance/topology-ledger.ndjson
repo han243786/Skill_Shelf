@@ -1,0 +1,1 @@
+{"cursor_id":"CURSOR-0001","mode":"refactor","parent":"sample.backend","nodes_changed":["sample.backend.routes"],"edges_changed":["routes enter through sample.backend facade"],"gates":["manual: sample route smoke passed"],"result":"closed","next":"advance to sample.backend.state topology slice"}

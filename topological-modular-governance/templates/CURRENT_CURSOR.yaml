@@ -1,0 +1,24 @@
+cursor_id: "CURSOR-0001"
+status: active
+work_mode_stack:
+  - mode: refactor
+    step: "fill-first-real-topology-slice"
+topology_slice:
+  parent_node: "sample.parent"
+  child_nodes:
+    - "sample.parent.child"
+  changed_edges:
+    - "none"
+allowed_workset:
+  editable_files:
+    - "docs/topological-governance/PROJECT_TOPOLOGY.md"
+  readonly_files:
+    - "src"
+forbidden_operations:
+  - "sibling_direct_dependency_without_release_transition_exception"
+  - "scope_expansion_without_cursor_update"
+gates:
+  - "manual: fill first parent node and run check-topological-governance.ps1"
+closeout_required: true
+next_action: "replace sample values with the first real project topology slice"
+handoff_notes: "This cursor is the single current task coordinate. Update it at every closeout."

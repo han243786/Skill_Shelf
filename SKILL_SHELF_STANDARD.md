@@ -62,6 +62,8 @@ package-name/
   references/
   templates/
   scripts/
+  schemas/
+  examples/
 ```
 
 ### 各目录职责
@@ -73,6 +75,8 @@ package-name/
 | `references/` | 详细方法、协议、案例、长说明 |
 | `templates/` | 可复制到目标项目的模板 |
 | `scripts/` | 可执行脚本，必须能独立说明参数和安全边界 |
+| `schemas/` | 机器可读协议、JSON Schema、枚举和校验契约 |
+| `examples/` | 已填充样例、CI 样例、ledger 样例和 walkthrough 产物 |
 
 ## 4. README 要求
 

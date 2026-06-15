@@ -1,0 +1,29 @@
+name: Topological Governance
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  topology-governance:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check topology governance scaffold
+        shell: pwsh
+        run: tools/check-topological-governance.ps1 -ProjectRoot . -Strict
+
+      - name: Check topology cursor
+        shell: pwsh
+        run: tools/check-topology-cursor.ps1 -ProjectRoot .
+
+      - name: Check topology ledger
+        shell: pwsh
+        run: tools/check-topology-ledger.ps1 -ProjectRoot . -AllowEmpty
+
+      - name: Check release-transition sibling edge exceptions
+        shell: pwsh
+        run: tools/check-forbidden-sibling-edges.ps1 -ProjectRoot .

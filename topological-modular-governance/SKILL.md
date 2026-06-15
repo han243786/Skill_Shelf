@@ -51,7 +51,7 @@ Use this skill when a project needs to be governed as a module topology instead 
 
 1. If adopting into a project, run or suggest `scripts/inventory-topology.ps1` first.
 2. Bootstrap the target project with `scripts/bootstrap-topological-governance.ps1` when the user wants files installed.
-3. Check the scaffold with `scripts/check-topological-governance.ps1`.
+3. Check the scaffold with `scripts/check-topological-governance.ps1`; use `-Strict` after real fields are filled.
 4. Classify the task mode: `refactor`, `advance`, `aspect_polish`, or `doc_debt_cleanup`.
 5. Identify the affected parent module, child nodes, public methods, state owners, external ports, tests, and docs.
 6. Draw or update the topology slice: nodes, edges, allowed communications, forbidden lateral links, and old/new paths.
@@ -96,6 +96,9 @@ For adoption:
 - inventory summary
 - files installed or skipped
 - scaffold check result
+- strict check result when fields are filled
+- cursor check result
+- ledger check result
 - first parent node to fill
 - first task card to use
 
@@ -112,4 +115,13 @@ When testing the product-like workflow, use a temporary project:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File D:\Skill_Shelf\topological-modular-governance\scripts\bootstrap-topological-governance.ps1 -ProjectRoot <temp-project>
 powershell -NoProfile -ExecutionPolicy Bypass -File <temp-project>\tools\check-topological-governance.ps1 -ProjectRoot <temp-project>
+```
+
+For L4-style checks after project fields are filled:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topological-governance.ps1 -ProjectRoot <project> -Strict
+powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topology-cursor.ps1 -ProjectRoot <project>
+powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topology-ledger.ps1 -ProjectRoot <project>
+powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-forbidden-sibling-edges.ps1 -ProjectRoot <project>
 ```

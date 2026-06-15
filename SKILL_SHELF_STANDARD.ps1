@@ -216,7 +216,7 @@ if (Test-Path -LiteralPath $topReadme) {
     }
 }
 
-$allowedPackageDirs = @("references", "templates", "scripts", "agents", "assets")
+$allowedPackageDirs = @("references", "templates", "scripts", "schemas", "examples", "agents", "assets")
 
 foreach ($dir in $packageDirs) {
     $name = $dir.Name

@@ -47,4 +47,14 @@ At closeout, prove topology consistency:
 - tests or smoke
 - old path status
 - residual risk
+
+Stop immediately and ask for a mode or scope update if:
+- parent_node cannot be found
+- allowed_scope is empty
+- requested file is outside allowed_scope
+- the task touches API, schema, event, capability, command, security, state, persistence, locks, auth, or public UI surface without the correct mode or upgrade
+- the task would introduce sibling-to-sibling direct dependency
+- release-transition performance exception is needed but not explicitly approved by the developer
+- closeout evidence cannot be tied to a real file path, real command, real test, real smoke result, or explicit manual verification
+- result would be written as closed while old_paths, full_tree, module_tree, or tests_or_smoke is empty
 ```

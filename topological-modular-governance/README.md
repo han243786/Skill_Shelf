@@ -1,6 +1,6 @@
 # Topological Modular Governance
 
-这是一套给大型项目使用的拓扑式模块化治理方案。它把项目看成一张可审计的白箱网络：模块是节点，父子通信是边，全量树是物理地图，模块树是逻辑拓扑，三种工作模式是改变网络的三类操作。
+这是一套给大型项目使用的拓扑式模块化治理方案。它把项目看成一张可审计的白箱网络：模块是节点，父子通信是边，全量树是物理地图，模块树是逻辑拓扑，三种开发模式加一种维护模式共同定义网络变更入口。
 
 ## 一句话说明
 
@@ -109,20 +109,23 @@ docs\topological-governance\AI_START_PROMPT.md
 每次 closeout 证明拓扑一致：模块树、全量树、代码路径、测试、契约和旧路径状态一致。
 ```
 
-## 三种工作模式
+## 四种工作入口
 
 | 模式 | 拓扑含义 | 典型动作 |
 | --- | --- | --- |
 | 重构模式 | 调整既有节点和边，不改变外部行为 | 抽离模块、整理父级 facade、关闭旧路径 |
 | 推进模式 | 新增节点、端口或能力 | 新 route、新 schema、新 UI surface、新 capability |
 | 切面打磨模式 | 复制一段影响范围，优化镜像拓扑，再裁剪旧拓扑 | UI 切面、体验切面、契约切面、文档切面 |
+| 文档债清理 | 修复旧路径、旧索引或旧说明，不做功能开发 | path confirmation、archive/retire、docs gate |
+
+前三种是开发模式，`doc_debt_cleanup` 是维护模式。四者共同组成工作入口。
 
 ## 文件夹内容
 
 - `SKILL.md`: 给 AI/Agent 使用的执行入口。
 - `references/00-operating-model.md`: 拓扑式模块化治理的核心模型。
 - `references/01-topology-map.md`: 如何建立模块拓扑图。
-- `references/02-work-mode-router.md`: 三种工作模式如何路由。
+- `references/02-work-mode-router.md`: 三种开发模式加一种维护模式如何路由。
 - `references/03-closeout-and-gates.md`: 拓扑一致性 closeout 和门禁。
 - `references/04-adoption-guide.md`: 如何接入既有项目。
 - `references/05-sample-walkthrough.md`: 从只读盘点到 closeout 的完整示例。
@@ -135,8 +138,13 @@ docs\topological-governance\AI_START_PROMPT.md
 - `templates/TOPOLOGY_CLOSEOUT.md`: 拓扑 closeout 模板。
 - `templates/AI_START_PROMPT.md`: 可直接交给 AI 的启动提示词。
 - `scripts/bootstrap-topological-governance.ps1`: 将模板和脚本安装到目标项目。
-- `scripts/check-topological-governance.ps1`: 检查目标项目的拓扑治理骨架。
+- `scripts/check-topological-governance.ps1`: 检查目标项目的拓扑治理骨架，`-Strict` 检查已填字段、父节点、真实路径和 closeout 证据。
 - `scripts/inventory-topology.ps1`: 只读盘点目标项目的拓扑候选信息。
+- `scripts/check-topology-cursor.ps1`: 检查唯一当前游标。
+- `scripts/check-topology-ledger.ps1`: 检查 closeout ledger。
+- `scripts/check-forbidden-sibling-edges.ps1`: 检查 release-transition 例外授权。
+- `schemas/`: 机器可读协议 schema。
+- `examples/`: CI、ledger 和已填充 sample project。
 
 ## 与相邻包的区别
 

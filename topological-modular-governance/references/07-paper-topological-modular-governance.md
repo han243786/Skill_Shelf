@@ -142,7 +142,7 @@ G = (V, E, A, M)
 - `V` 是节点集合，包括父模块、子模块、叶子模块、接口、契约、测试面、文档资产、脚本和外部依赖。
 - `E` 是边集合，包括调用、依赖、父级 facade、adapter、event、registry、schema、文档引用、测试覆盖和发布连接。
 - `A` 是属性集合，包括 owner、public surface、state owner、side effect、risk level、path、gate、status。
-- `M` 是工作模式集合：`{refactor, advance, aspect_polish, doc_debt_cleanup}`。
+- `M` 是工作入口集合：三种开发模式 `{refactor, advance, aspect_polish}` 加一种维护模式 `{doc_debt_cleanup}`。
 
 ### 4.2 白箱节点
 
