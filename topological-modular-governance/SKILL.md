@@ -41,11 +41,12 @@ Use this skill when a project needs to be governed as a module topology instead 
 - Start by naming the work mode before continuing a long-running task.
 - Treat modules as white-box nodes, not just folders.
 - Treat parent-child communication paths as governed edges.
-- Do not allow sibling-to-sibling links during development unless a developer explicitly declares release-transition performance work.
+- Do not allow sibling-to-sibling links during development unless a developer explicitly declares release-transition performance work and `RELEASE_TRANSITION_EXCEPTION.md` is approved with `developer_approved: true`, a real approver, an explicit `A -> B` edge, performance evidence, review date or expiry, and rollback.
 - Record public method ownership when public methods matter to the change.
 - Keep full tree and module tree separate: physical file map versus logical white-box network.
 - Do not split large tree files just because they are large; split only when定位速度, gate stability, or reverse lookup reliability is measurably hurt.
 - Closeout must prove topology consistency, not just test success.
+- `status: closed` requires closeout evidence and a matching ledger row; blank closeout results are not acceptable strict-mode evidence.
 
 ## Default Workflow
 
@@ -125,3 +126,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topolo
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topology-ledger.ps1 -ProjectRoot <project>
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-forbidden-sibling-edges.ps1 -ProjectRoot <project>
 ```
+
+Use `check-topology-ledger.ps1 -AllowEmpty` only immediately after bootstrapping an empty project. Do not use it as an operational CI gate.

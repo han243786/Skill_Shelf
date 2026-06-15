@@ -2,6 +2,7 @@
 
 ```yaml
 exception_id: none
+developer_approved: false
 approved_by: none
 scope: none
 performance_evidence: none
@@ -10,5 +11,5 @@ why_parent_facade_insufficient: none
 rollback: none
 expiry: none
 review_date: none
-status: proposed
+status: none
 ```

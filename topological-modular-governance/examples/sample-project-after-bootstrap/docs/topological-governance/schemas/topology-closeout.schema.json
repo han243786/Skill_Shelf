@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-shelf.local/topological-modular-governance/topology-closeout.schema.json",
+  "title": "Topology Closeout",
+  "type": "object",
+  "required": [
+    "mode",
+    "parent",
+    "nodes_changed",
+    "edges_changed",
+    "public_surface",
+    "full_tree",
+    "module_tree",
+    "tests_or_smoke",
+    "old_paths",
+    "result",
+    "next"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["refactor", "advance", "aspect_polish", "doc_debt_cleanup"]
+    },
+    "parent": { "type": "string", "minLength": 1 },
+    "nodes_changed": { "type": "array", "items": { "type": "string" } },
+    "edges_changed": { "type": "array", "items": { "type": "string" } },
+    "public_surface": { "type": "string", "minLength": 1 },
+    "state_or_side_effects": { "type": "string" },
+    "full_tree": { "type": "string", "minLength": 1 },
+    "module_tree": { "type": "string", "minLength": 1 },
+    "contracts": { "type": "string" },
+    "tests_or_smoke": { "type": "string", "minLength": 1 },
+    "old_paths": {
+      "type": "string",
+      "enum": ["none", "archived", "retired", "debt_open"]
+    },
+    "result": {
+      "type": "string",
+      "enum": ["closed", "closed_with_debt", "blocked", "needs_mode_jump"]
+    },
+    "next": { "type": "string", "minLength": 1 }
+  }
+}

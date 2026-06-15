@@ -23,7 +23,12 @@ $required = @(
     "$GovernanceRoot\CURRENT_CURSOR.yaml",
     "$GovernanceRoot\TOPOLOGY_CURSOR.md",
     "$GovernanceRoot\ASPECT_POLISH_CUTOVER.md",
-    "$GovernanceRoot\RELEASE_TRANSITION_EXCEPTION.md"
+    "$GovernanceRoot\RELEASE_TRANSITION_EXCEPTION.md",
+    "$GovernanceRoot\schemas\project-topology.schema.json",
+    "$GovernanceRoot\schemas\topology-task-card.schema.json",
+    "$GovernanceRoot\schemas\topology-module-node.schema.json",
+    "$GovernanceRoot\schemas\topology-closeout.schema.json",
+    "$GovernanceRoot\schemas\topology-cursor.schema.json"
 )
 
 $requiredTerms = @{
@@ -105,6 +110,79 @@ function Test-PathList {
     }
 }
 
+function Read-ProjectJson {
+    param([Parameter(Mandatory = $true)][string]$Relative)
+    $path = Join-Path $projectPath $Relative
+    return Get-Content -Encoding UTF8 -LiteralPath $path -Raw | ConvertFrom-Json
+}
+
+function Assert-SchemaRequiredFieldsAppear {
+    param(
+        [Parameter(Mandatory = $true)][string]$SchemaRelative,
+        [Parameter(Mandatory = $true)][string]$TemplateRelative
+    )
+
+    $schemaPath = Join-Path $projectPath $SchemaRelative
+    $templatePath = Join-Path $projectPath $TemplateRelative
+    if (-not (Test-Path -LiteralPath $schemaPath) -or -not (Test-Path -LiteralPath $templatePath)) {
+        return
+    }
+
+    try {
+        $schema = Read-ProjectJson -Relative $SchemaRelative
+    } catch {
+        Add-Issue "schema is not valid JSON: $SchemaRelative - $($_.Exception.Message)"
+        return
+    }
+
+    $templateText = Get-Content -Encoding UTF8 -LiteralPath $templatePath -Raw
+    foreach ($field in @($schema.required)) {
+        if ($templateText -notmatch "(?m)^\s*$([regex]::Escape($field))\s*:") {
+            Add-Issue "schema/template mismatch: required field '$field' from $SchemaRelative is missing in $TemplateRelative"
+        }
+    }
+}
+
+function Assert-ScalarFilled {
+    param(
+        [Parameter(Mandatory = $true)][string]$Text,
+        [Parameter(Mandatory = $true)][string]$Field,
+        [Parameter(Mandatory = $true)][string]$Context,
+        [string[]]$AllowValues = @()
+    )
+
+    $value = Get-ScalarField -Text $Text -Name $Field
+    if ($value -eq "") {
+        Add-Issue "strict: $Context $Field must be filled"
+        return ""
+    }
+    if ($AllowValues.Count -gt 0 -and $value -notin $AllowValues) {
+        Add-Issue "strict: $Context $Field must be one of: $($AllowValues -join ' / ')"
+    }
+    return $value
+}
+
+foreach ($schemaRelative in @(
+    "$GovernanceRoot\schemas\project-topology.schema.json",
+    "$GovernanceRoot\schemas\topology-task-card.schema.json",
+    "$GovernanceRoot\schemas\topology-module-node.schema.json",
+    "$GovernanceRoot\schemas\topology-closeout.schema.json",
+    "$GovernanceRoot\schemas\topology-cursor.schema.json"
+)) {
+    $schemaPath = Join-Path $projectPath $schemaRelative
+    if (Test-Path -LiteralPath $schemaPath) {
+        try {
+            Read-ProjectJson -Relative $schemaRelative | Out-Null
+        } catch {
+            Add-Issue "schema is not valid JSON: $schemaRelative - $($_.Exception.Message)"
+        }
+    }
+}
+
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-task-card.schema.json" -TemplateRelative "$GovernanceRoot\TOPOLOGY_TASK_CARD.md"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-closeout.schema.json" -TemplateRelative "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-cursor.schema.json" -TemplateRelative "$GovernanceRoot\CURRENT_CURSOR.yaml"
+
 foreach ($relative in $required) {
     $path = Join-Path $projectPath $relative
     if (-not (Test-Path -LiteralPath $path)) {
@@ -152,6 +230,10 @@ if ($Strict) {
         }
     }
 
+    $workMode = Assert-ScalarFilled -Text $taskCard -Field "work_mode" -Context "TOPOLOGY_TASK_CARD.md" -AllowValues @("refactor", "advance", "aspect_polish", "doc_debt_cleanup")
+    Assert-ScalarFilled -Text $taskCard -Field "reason" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "allowed_scope" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+
     $parentNode = Get-ScalarField -Text $taskCard -Name "parent_node"
     if ($parentNode -eq "") {
         Add-Issue "strict: TOPOLOGY_TASK_CARD.md parent_node must be filled"
@@ -168,12 +250,19 @@ if ($Strict) {
     if ($gates -eq "") {
         Add-Issue "strict: gates must include at least one real command or manual acceptance item"
     }
+    Assert-ScalarFilled -Text $taskCard -Field "exit_gate" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "rollback" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
 
-    $result = Get-ScalarField -Text $closeout -Name "result"
-    $oldPaths = Get-ScalarField -Text $closeout -Name "old_paths"
-    if ($oldPaths -ne "" -and $oldPaths -notin @("none", "archived", "retired", "debt_open")) {
-        Add-Issue "strict: old_paths must be one of none / archived / retired / debt_open"
+    $closeoutMode = Assert-ScalarFilled -Text $closeout -Field "mode" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("refactor", "advance", "aspect_polish", "doc_debt_cleanup")
+    $closeoutParent = Assert-ScalarFilled -Text $closeout -Field "parent" -Context "TOPOLOGY_CLOSEOUT.md"
+    if ($closeoutParent -ne "" -and $nodes.Count -gt 0 -and -not $nodes.Contains($closeoutParent)) {
+        Add-Issue "strict: closeout parent '$closeoutParent' is not listed in PROJECT_TOPOLOGY.md"
     }
+    foreach ($field in @("nodes_changed", "edges_changed", "public_surface", "full_tree", "module_tree", "tests_or_smoke", "next")) {
+        Assert-ScalarFilled -Text $closeout -Field $field -Context "TOPOLOGY_CLOSEOUT.md" | Out-Null
+    }
+    $oldPaths = Assert-ScalarFilled -Text $closeout -Field "old_paths" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("none", "archived", "retired", "debt_open")
+    $result = Assert-ScalarFilled -Text $closeout -Field "result" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("closed", "closed_with_debt", "blocked", "needs_mode_jump")
     if ($result -eq "closed") {
         foreach ($field in @("full_tree", "module_tree", "tests_or_smoke")) {
             if ((Get-ScalarField -Text $closeout -Name $field) -eq "") {

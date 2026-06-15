@@ -32,6 +32,11 @@ Required:
 - closeout requires full tree and module tree status
 - closeout requires old path status
 - check script verifies the governance scaffold
+- strict mode rejects blank closeout result, blank full tree/module tree proof, and blank smoke/test proof
+- cursor check rejects parent nodes not listed in the project topology
+- direct sibling edge check scans task card, module node, project topology, cursor, aspect cutover, and closeout records
+- release-transition exceptions default to `status: none` and require developer approval, explicit edge, performance evidence, review date or expiry, and rollback before approval
+- schema files are valid JSON and their required fields stay aligned with templates
 
 ## 4. Can It Connect To Existing Packages?
 
@@ -48,6 +53,6 @@ Required:
 | L1 Method | clear concept and rules |
 | L2 Package | README, SKILL, references, templates |
 | L3 Product-Like | bootstrap, check, inventory, prompt, walkthrough |
-| L4 Operational | project-specific gates, CI integration, real case evidence |
+| L4 Operational | project-specific gates, CI integration, real case evidence, non-empty ledger, cursor/topology cross-check, and direct-edge exception checks |
 
-This package targets L3 by default. A specific project reaches L4 only after its own tests, gates, module tree, full tree, and closeout process are wired in.
+This package targets L3 by default and ships L4 hardening checks. A specific project reaches L4 only after its own tests, gates, module tree, full tree, non-empty ledger, and closeout process are wired in.

@@ -22,7 +22,7 @@ jobs:
 
       - name: Check topology ledger
         shell: pwsh
-        run: tools/check-topology-ledger.ps1 -ProjectRoot . -AllowEmpty
+        run: tools/check-topology-ledger.ps1 -ProjectRoot .
 
       - name: Check release-transition sibling edge exceptions
         shell: pwsh

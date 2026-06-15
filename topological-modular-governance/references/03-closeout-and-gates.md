@@ -31,6 +31,9 @@ next_cursor:
 | 模块树检查 | 逻辑节点、public owner、父子边没有漂移 |
 | 旧路径检查 | 文档没有继续指向已不存在的旧事实 |
 | API / schema 检查 | 外部契约没有隐式破坏 |
+| Cursor 拓扑检查 | 当前游标的 `parent_node` 必须存在于项目拓扑图 |
+| Ledger 检查 | 运行态 closeout 必须留下非空 ledger 记录 |
+| Release-transition 例外检查 | 横向直连必须有开发者授权、性能证据、review/expiry 和 rollback |
 
 ## 3. AI 幻觉发现点
 
@@ -41,6 +44,9 @@ next_cursor:
 - AI 说“无影响”，但工作模式影响了节点或边。
 - AI 说“只是文档”，但实际改了接口、状态、路径或模块 owner。
 - AI 让子模块直接调用 sibling。
+- AI 在 cursor 中写入不存在的 parent node。
+- AI 把空 closeout 当成完成态。
+- AI 用 `bot`、`trust me` 或空泛说明伪造 release-transition 例外。
 - AI 把用户一次性问题混进长期递归状态。
 
 处理方式：

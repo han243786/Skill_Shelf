@@ -4,6 +4,7 @@ Use this only when a developer explicitly declares release-version performance t
 
 ```yaml
 exception_id:
+developer_approved: false
 approved_by:
 scope:
 performance_evidence:
@@ -12,7 +13,7 @@ why_parent_facade_insufficient:
 rollback:
 expiry:
 review_date:
-status: proposed
+status: none
 ```
 
 ## Rules
@@ -23,3 +24,4 @@ status: proposed
 4. The exception must be reversible.
 5. The exception must have an expiry or review date.
 6. The direct edge must be registered as an exception, not normalized as the default development topology.
+7. `status: approved` requires `developer_approved: true`, a real developer in `approved_by`, an explicit `direct_edge_added`, and concrete performance evidence.

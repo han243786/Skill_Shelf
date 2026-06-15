@@ -138,12 +138,12 @@ docs\topological-governance\AI_START_PROMPT.md
 - `templates/TOPOLOGY_CLOSEOUT.md`: 拓扑 closeout 模板。
 - `templates/AI_START_PROMPT.md`: 可直接交给 AI 的启动提示词。
 - `scripts/bootstrap-topological-governance.ps1`: 将模板和脚本安装到目标项目。
-- `scripts/check-topological-governance.ps1`: 检查目标项目的拓扑治理骨架，`-Strict` 检查已填字段、父节点、真实路径和 closeout 证据。
+- `scripts/check-topological-governance.ps1`: 检查目标项目的拓扑治理骨架，`-Strict` 检查 schema 可读、已填字段、父节点、真实路径和 closeout 证据。
 - `scripts/inventory-topology.ps1`: 只读盘点目标项目的拓扑候选信息。
-- `scripts/check-topology-cursor.ps1`: 检查唯一当前游标。
+- `scripts/check-topology-cursor.ps1`: 检查唯一当前游标，并核对 `parent_node` 是否存在于项目拓扑图。
 - `scripts/check-topology-ledger.ps1`: 检查 closeout ledger。
-- `scripts/check-forbidden-sibling-edges.ps1`: 检查 release-transition 例外授权。
-- `schemas/`: 机器可读协议 schema。
+- `scripts/check-forbidden-sibling-edges.ps1`: 扫描任务卡、节点卡、项目拓扑、cursor 和 closeout 中的横向直连，并检查 release-transition 例外授权。
+- `schemas/`: 机器可读协议 schema，严格检查会校验 schema JSON 可读并与模板必填字段保持一致。
 - `examples/`: CI、ledger 和已填充 sample project。
 
 ## 与相邻包的区别
@@ -169,14 +169,16 @@ modular-refactor
 
 ## 产品化能力等级
 
-这个包默认达到 `L3 Product-Like`：
+这个包默认达到 `L3 Product-Like`，并内置 L4 hardening 门禁。具体项目只有在接入自己的 CI、真实测试、模块树、全量树和案例证据后才算 `L4 Operational`：
 
 | 等级 | 含义 | 当前状态 |
 | --- | --- | --- |
 | L1 Method | 有清晰概念和规则 | 已具备 |
 | L2 Package | 有 README、SKILL、references、templates | 已具备 |
 | L3 Product-Like | 有 bootstrap、check、inventory、prompt、walkthrough | 已具备 |
-| L4 Operational | 接入具体项目 CI、真实门禁、项目级双树和案例证据 | 需要在目标项目内落地 |
+| L4 Operational | 接入具体项目 CI、真实门禁、项目级双树和案例证据 | 包已提供 hardening 检查；仍需要在目标项目内落地 |
+
+CI 样例默认按运行态使用：`topology-ledger.ndjson` 不允许为空。只有刚 bootstrap、尚未产生第一条 closeout 时，才可以临时手动使用 `check-topology-ledger.ps1 -AllowEmpty`。
 
 ## 成功标准
 

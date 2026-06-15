@@ -3,7 +3,13 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$ProjectRoot,
 
-    [string]$CursorPath = "docs\topological-governance\CURRENT_CURSOR.yaml"
+    [string]$CursorPath = "docs\topological-governance\CURRENT_CURSOR.yaml",
+
+    [string]$ProjectTopologyPath = "docs\topological-governance\PROJECT_TOPOLOGY.md",
+
+    [string]$LedgerPath = "docs\topological-governance\topology-ledger.ndjson",
+
+    [string]$CloseoutPath = "docs\topological-governance\TOPOLOGY_CLOSEOUT.md"
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,6 +24,43 @@ function Add-Issue {
     $issues.Add($Message) | Out-Null
 }
 
+function Get-ScalarField {
+    param(
+        [Parameter(Mandatory = $true)][string]$Text,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    $match = [regex]::Match($Text, "(?m)^\s*$([regex]::Escape($Name)):\s*(?<value>.+?)\s*$")
+    if (-not $match.Success) {
+        return ""
+    }
+    return $match.Groups["value"].Value.Trim().Trim('"')
+}
+
+function Get-TopologyNodes {
+    param([Parameter(Mandatory = $true)][string]$ProjectTopologyText)
+
+    $nodes = New-Object System.Collections.Generic.HashSet[string]
+    foreach ($line in ($ProjectTopologyText -split "\r?\n")) {
+        if ($line -notmatch "^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|") {
+            continue
+        }
+
+        $node = $Matches[1].Trim()
+        $purpose = $Matches[2].Trim()
+        $owner = $Matches[3].Trim()
+        $paths = $Matches[4].Trim()
+        $status = $Matches[5].Trim()
+
+        if ($node -in @("Node", "---", "") -or $purpose -eq "" -or $owner -eq "" -or $paths -eq "" -or $status -eq "") {
+            continue
+        }
+
+        $nodes.Add($node) | Out-Null
+    }
+    return $nodes
+}
+
 if (-not (Test-Path -LiteralPath $path)) {
     Add-Issue "missing cursor: $CursorPath"
 } else {
@@ -28,20 +71,56 @@ if (-not (Test-Path -LiteralPath $path)) {
         }
     }
 
-    $status = ""
-    if ($text -match "(?m)^\s*status\s*:\s*(?<value>.+?)\s*$") {
-        $status = $Matches.value.Trim().Trim('"')
-    }
+    $cursorId = Get-ScalarField -Text $text -Name "cursor_id"
+    $status = Get-ScalarField -Text $text -Name "status"
     if ($status -ne "" -and $status -notin @("active", "blocked", "closed", "superseded")) {
         Add-Issue "cursor status must be active / blocked / closed / superseded"
     }
 
-    $parent = ""
-    if ($text -match "(?m)^\s*parent_node\s*:\s*(?<value>.+?)\s*$") {
-        $parent = $Matches.value.Trim().Trim('"')
-    }
+    $parent = Get-ScalarField -Text $text -Name "parent_node"
     if ($parent -eq "") {
         Add-Issue "cursor parent_node must be filled"
+    }
+
+    $topologyPath = Join-Path $projectPath $ProjectTopologyPath
+    if ($parent -ne "" -and (Test-Path -LiteralPath $topologyPath)) {
+        $topologyText = Get-Content -Encoding UTF8 -LiteralPath $topologyPath -Raw
+        $nodes = Get-TopologyNodes -ProjectTopologyText $topologyText
+        if ($nodes.Count -gt 0 -and -not $nodes.Contains($parent)) {
+            Add-Issue "cursor parent_node '$parent' is not listed in $ProjectTopologyPath"
+        }
+    }
+
+    if ($status -eq "closed") {
+        $ledgerFile = Join-Path $projectPath $LedgerPath
+        $closeoutFile = Join-Path $projectPath $CloseoutPath
+
+        if (-not (Test-Path -LiteralPath $ledgerFile)) {
+            Add-Issue "closed cursor requires ledger: $LedgerPath"
+        } else {
+            $hasClosedLedger = $false
+            foreach ($line in (Get-Content -Encoding UTF8 -LiteralPath $ledgerFile | Where-Object { $_.Trim() -ne "" })) {
+                try {
+                    $record = $line | ConvertFrom-Json
+                    if ($record.cursor_id -eq $cursorId -and $record.result -eq "closed") {
+                        $hasClosedLedger = $true
+                    }
+                } catch {
+                    Add-Issue "closed cursor ledger has invalid JSON: $($_.Exception.Message)"
+                }
+            }
+            if (-not $hasClosedLedger) {
+                Add-Issue "closed cursor '$cursorId' requires a matching closed ledger row"
+            }
+        }
+
+        if (Test-Path -LiteralPath $closeoutFile) {
+            $closeoutText = Get-Content -Encoding UTF8 -LiteralPath $closeoutFile -Raw
+            $closeoutResult = Get-ScalarField -Text $closeoutText -Name "result"
+            if ($closeoutResult -ne "closed") {
+                Add-Issue "closed cursor requires TOPOLOGY_CLOSEOUT.md result: closed"
+            }
+        }
     }
 }
 
