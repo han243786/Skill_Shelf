@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-shelf.local/topological-modular-governance/full-feature-tree.schema.json",
+  "title": "Full Feature Tree",
+  "type": "object",
+  "required": [
+    "feature_tree_version",
+    "north_star",
+    "root_capabilities",
+    "active_growth_paths",
+    "protected_behaviors",
+    "known_gaps",
+    "feature_nodes",
+    "growth_edges"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "feature_tree_version": { "type": "string", "minLength": 1 },
+    "north_star": { "type": "string", "minLength": 1 },
+    "root_capabilities": { "type": "array", "items": { "type": "string" } },
+    "active_growth_paths": { "type": "array", "items": { "type": "string" } },
+    "protected_behaviors": { "type": "array", "items": { "type": "string" } },
+    "known_gaps": { "type": "array", "items": { "type": "string" } },
+    "feature_nodes": { "type": "array", "items": { "type": "object" } },
+    "growth_edges": { "type": "array", "items": { "type": "object" } }
+  }
+}

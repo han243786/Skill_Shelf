@@ -46,8 +46,14 @@ docs\topological-governance\WORK_MODE_ROUTER.md
 docs\topological-governance\TOPOLOGY_TASK_CARD.md
 docs\topological-governance\TOPOLOGY_MODULE_NODE.md
 docs\topological-governance\TOPOLOGY_CLOSEOUT.md
+docs\topological-governance\QPCURSOR.md
+docs\topological-governance\NORTH_STAR.md
+docs\topological-governance\FULL_FEATURE_TREE.md
+docs\topological-governance\GOVERNANCE_HEAT.md
+docs\topological-governance\LOCAL_INVARIANTS.md
 docs\topological-governance\AI_START_PROMPT.md
 tools\check-topological-governance.ps1
+tools\check-qpcursor-governance.ps1
 tools\inventory-topology.ps1
 ```
 
@@ -86,7 +92,11 @@ Example:
 work_mode: refactor
 reason: move route handlers behind a parent facade without changing public API
 allowed_scope: backend runtime route files, route tests, module tree entries
+governance_heat: G2
+required_depth: Standard
+heat_reason: parent-child route edge is being changed
 topology_slice: backend.runtime -> backend.runtime.routes
+local_invariants: docs/topological-governance/LOCAL_INVARIANTS.md
 exit_gate: route tests pass, parent facade preserved, topology closeout written
 ```
 
@@ -98,6 +108,8 @@ continue refactor
 
 because the next agent knows exactly what topology slice is active.
 
+Then update `CURRENT_CURSOR.yaml` with the same parent node, heat, required depth, allowed workset, stop rules, and evidence requirements.
+
 ## Step 5. Close Out
 
 Example closeout:
@@ -106,12 +118,18 @@ Example closeout:
 topology_closeout:
   mode: refactor
   parent: backend.runtime
+  cursor_id: CURSOR-0001
+  governance_heat: G2
+  required_depth: Standard
   nodes_changed: backend.runtime.routes
   edges_changed: child route handlers now enter through parent facade
   public_surface: unchanged
+  local_invariants: loaded and satisfied
+  interface_freeze: public API unchanged
   full_tree: updated
   module_tree: updated
   tests_or_smoke: route tests pass
+  evidence: check-topological-governance, check-topology-cursor, check-qpcursor-governance
   old_paths: none introduced
   result: closed
   next: choose backend.runtime.state

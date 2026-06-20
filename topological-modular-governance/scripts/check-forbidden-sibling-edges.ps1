@@ -109,6 +109,10 @@ $scanFiles = @(
     "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md",
     "$GovernanceRoot\CURRENT_CURSOR.yaml",
     "$GovernanceRoot\TOPOLOGY_CURSOR.md",
+    "$GovernanceRoot\QPCURSOR.md",
+    "$GovernanceRoot\NORTH_STAR.md",
+    "$GovernanceRoot\FULL_FEATURE_TREE.md",
+    "$GovernanceRoot\LOCAL_INVARIANTS.md",
     "$GovernanceRoot\ASPECT_POLISH_CUTOVER.md"
 )
 

@@ -8,11 +8,16 @@
     "parent",
     "status",
     "purpose",
+    "governance_heat_floor",
     "inputs",
     "outputs",
     "public_surface",
     "allowed_edges",
     "forbidden_edges",
+    "local_invariants",
+    "policy_refs",
+    "heat_escalation",
+    "stop_if",
     "full_tree_paths",
     "tests_or_gates"
   ],
@@ -25,6 +30,10 @@
       "enum": ["candidate", "active", "closed", "deprecated", "archived"]
     },
     "purpose": { "type": "string", "minLength": 1 },
+    "governance_heat_floor": {
+      "type": "string",
+      "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
+    },
     "inputs": { "type": "array", "items": { "type": "string" } },
     "outputs": { "type": "array", "items": { "type": "string" } },
     "public_surface": { "type": "array", "items": { "type": "string" } },
@@ -33,6 +42,10 @@
     "children": { "type": "array", "items": { "type": "string" } },
     "allowed_edges": { "type": "array", "items": { "type": "string" } },
     "forbidden_edges": { "type": "array", "items": { "type": "string" } },
+    "local_invariants": { "type": "array", "items": { "type": "string" } },
+    "policy_refs": { "type": "array", "items": { "type": "string" } },
+    "heat_escalation": { "type": "array", "items": { "type": "string" } },
+    "stop_if": { "type": "array", "items": { "type": "string" } },
     "full_tree_paths": { "type": "array", "items": { "type": "string" } },
     "tests_or_gates": { "type": "array", "items": { "type": "string" } },
     "closeout_rule": { "type": "string" }

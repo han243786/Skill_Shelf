@@ -19,6 +19,11 @@ $required = @(
     "$GovernanceRoot\TOPOLOGY_TASK_CARD.md",
     "$GovernanceRoot\TOPOLOGY_MODULE_NODE.md",
     "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md",
+    "$GovernanceRoot\QPCURSOR.md",
+    "$GovernanceRoot\NORTH_STAR.md",
+    "$GovernanceRoot\FULL_FEATURE_TREE.md",
+    "$GovernanceRoot\GOVERNANCE_HEAT.md",
+    "$GovernanceRoot\LOCAL_INVARIANTS.md",
     "$GovernanceRoot\AI_START_PROMPT.md",
     "$GovernanceRoot\CURRENT_CURSOR.yaml",
     "$GovernanceRoot\TOPOLOGY_CURSOR.md",
@@ -28,15 +33,25 @@ $required = @(
     "$GovernanceRoot\schemas\topology-task-card.schema.json",
     "$GovernanceRoot\schemas\topology-module-node.schema.json",
     "$GovernanceRoot\schemas\topology-closeout.schema.json",
-    "$GovernanceRoot\schemas\topology-cursor.schema.json"
+    "$GovernanceRoot\schemas\topology-cursor.schema.json",
+    "$GovernanceRoot\schemas\qpcursor.schema.json",
+    "$GovernanceRoot\schemas\north-star.schema.json",
+    "$GovernanceRoot\schemas\full-feature-tree.schema.json",
+    "$GovernanceRoot\schemas\governance-heat.schema.json",
+    "$GovernanceRoot\schemas\local-invariants.schema.json"
 )
 
 $requiredTerms = @{
-    "$GovernanceRoot\PROJECT_TOPOLOGY.md" = @("Top-Level Nodes", "Parent-Child Communication Rules", "Hot Assets", "Known Old Path Debt")
+    "$GovernanceRoot\PROJECT_TOPOLOGY.md" = @("Top-Level Nodes", "Parent-Child Communication Rules", "Hot Assets", "Known Old Path Debt", "north_star", "full_feature_tree", "module_topology_tree", "qpcursor_required")
     "$GovernanceRoot\WORK_MODE_ROUTER.md" = @("refactor", "advance", "aspect_polish", "doc_debt_cleanup")
-    "$GovernanceRoot\TOPOLOGY_TASK_CARD.md" = @("work_mode", "parent_node", "changed_edges", "exit_gate")
-    "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md" = @("topology_closeout", "nodes_changed", "edges_changed", "old_paths")
-    "$GovernanceRoot\AI_START_PROMPT.md" = @("Stop immediately", "parent_node cannot be found", "release-transition")
+    "$GovernanceRoot\TOPOLOGY_TASK_CARD.md" = @("work_mode", "parent_node", "changed_edges", "north_star_alignment", "growth_vector", "governance_heat", "required_depth", "exit_gate")
+    "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md" = @("topology_closeout", "nodes_changed", "edges_changed", "governance_heat", "evidence", "old_paths")
+    "$GovernanceRoot\QPCURSOR.md" = @("cursor_version", "north_star", "growth_vector", "governance_heat", "local_invariants", "interface_freeze", "anti_regression", "evidence")
+    "$GovernanceRoot\NORTH_STAR.md" = @("north_star", "final_state", "growth_direction", "anti_regression", "convergence_evidence")
+    "$GovernanceRoot\FULL_FEATURE_TREE.md" = @("feature_tree_version", "north_star", "feature_nodes", "growth_edges")
+    "$GovernanceRoot\GOVERNANCE_HEAT.md" = @("G0", "G1", "G2", "G3", "G4", "G5", "Light", "Standard", "Precision")
+    "$GovernanceRoot\LOCAL_INVARIANTS.md" = @("module", "public_surface", "forbidden_edges", "local_invariants", "north_star_refs", "stop_if")
+    "$GovernanceRoot\AI_START_PROMPT.md" = @("Stop immediately", "parent_node cannot be found", "governance_heat", "local invariants", "release-transition")
 }
 
 $issues = New-Object System.Collections.Generic.List[string]
@@ -167,7 +182,12 @@ foreach ($schemaRelative in @(
     "$GovernanceRoot\schemas\topology-task-card.schema.json",
     "$GovernanceRoot\schemas\topology-module-node.schema.json",
     "$GovernanceRoot\schemas\topology-closeout.schema.json",
-    "$GovernanceRoot\schemas\topology-cursor.schema.json"
+    "$GovernanceRoot\schemas\topology-cursor.schema.json",
+    "$GovernanceRoot\schemas\qpcursor.schema.json",
+    "$GovernanceRoot\schemas\north-star.schema.json",
+    "$GovernanceRoot\schemas\full-feature-tree.schema.json",
+    "$GovernanceRoot\schemas\governance-heat.schema.json",
+    "$GovernanceRoot\schemas\local-invariants.schema.json"
 )) {
     $schemaPath = Join-Path $projectPath $schemaRelative
     if (Test-Path -LiteralPath $schemaPath) {
@@ -182,6 +202,11 @@ foreach ($schemaRelative in @(
 Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-task-card.schema.json" -TemplateRelative "$GovernanceRoot\TOPOLOGY_TASK_CARD.md"
 Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-closeout.schema.json" -TemplateRelative "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md"
 Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\topology-cursor.schema.json" -TemplateRelative "$GovernanceRoot\CURRENT_CURSOR.yaml"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\qpcursor.schema.json" -TemplateRelative "$GovernanceRoot\CURRENT_CURSOR.yaml"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\north-star.schema.json" -TemplateRelative "$GovernanceRoot\NORTH_STAR.md"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\full-feature-tree.schema.json" -TemplateRelative "$GovernanceRoot\FULL_FEATURE_TREE.md"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\governance-heat.schema.json" -TemplateRelative "$GovernanceRoot\GOVERNANCE_HEAT.md"
+Assert-SchemaRequiredFieldsAppear -SchemaRelative "$GovernanceRoot\schemas\local-invariants.schema.json" -TemplateRelative "$GovernanceRoot\LOCAL_INVARIANTS.md"
 
 foreach ($relative in $required) {
     $path = Join-Path $projectPath $relative
@@ -231,6 +256,11 @@ if ($Strict) {
     }
 
     $workMode = Assert-ScalarFilled -Text $taskCard -Field "work_mode" -Context "TOPOLOGY_TASK_CARD.md" -AllowValues @("refactor", "advance", "aspect_polish", "doc_debt_cleanup")
+    Assert-ScalarFilled -Text $taskCard -Field "north_star_alignment" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "growth_vector" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "governance_heat" -Context "TOPOLOGY_TASK_CARD.md" -AllowValues @("G0", "G1", "G2", "G3", "G4", "G5") | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "required_depth" -Context "TOPOLOGY_TASK_CARD.md" -AllowValues @("Light", "Standard", "Precision") | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "heat_reason" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
     Assert-ScalarFilled -Text $taskCard -Field "reason" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
     Assert-ScalarFilled -Text $taskCard -Field "allowed_scope" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
 
@@ -252,15 +282,19 @@ if ($Strict) {
     }
     Assert-ScalarFilled -Text $taskCard -Field "exit_gate" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
     Assert-ScalarFilled -Text $taskCard -Field "rollback" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "local_invariants" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
+    Assert-ScalarFilled -Text $taskCard -Field "stop_if" -Context "TOPOLOGY_TASK_CARD.md" | Out-Null
 
     $closeoutMode = Assert-ScalarFilled -Text $closeout -Field "mode" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("refactor", "advance", "aspect_polish", "doc_debt_cleanup")
     $closeoutParent = Assert-ScalarFilled -Text $closeout -Field "parent" -Context "TOPOLOGY_CLOSEOUT.md"
     if ($closeoutParent -ne "" -and $nodes.Count -gt 0 -and -not $nodes.Contains($closeoutParent)) {
         Add-Issue "strict: closeout parent '$closeoutParent' is not listed in PROJECT_TOPOLOGY.md"
     }
-    foreach ($field in @("nodes_changed", "edges_changed", "public_surface", "full_tree", "module_tree", "tests_or_smoke", "next")) {
+    foreach ($field in @("cursor_id", "north_star_alignment", "convergence_evidence", "governance_heat", "required_depth", "nodes_changed", "edges_changed", "public_surface", "local_invariants", "interface_freeze", "full_tree", "module_tree", "tests_or_smoke", "evidence", "next")) {
         Assert-ScalarFilled -Text $closeout -Field $field -Context "TOPOLOGY_CLOSEOUT.md" | Out-Null
     }
+    Assert-ScalarFilled -Text $closeout -Field "governance_heat" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("G0", "G1", "G2", "G3", "G4", "G5") | Out-Null
+    Assert-ScalarFilled -Text $closeout -Field "required_depth" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("Light", "Standard", "Precision") | Out-Null
     $oldPaths = Assert-ScalarFilled -Text $closeout -Field "old_paths" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("none", "archived", "retired", "debt_open")
     $result = Assert-ScalarFilled -Text $closeout -Field "result" -Context "TOPOLOGY_CLOSEOUT.md" -AllowValues @("closed", "closed_with_debt", "blocked", "needs_mode_jump")
     if ($result -eq "closed") {

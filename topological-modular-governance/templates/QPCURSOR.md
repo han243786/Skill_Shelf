@@ -1,17 +1,11 @@
-# Topology Cursor
+# QPCursor Protocol
 
-The topology cursor is now QPCursor-compatible. It keeps the original topology slice discipline and adds governance heat, local invariants, interface freeze, evidence, and stop rules.
+QPCursor is the handoff contract for topology governance. It is stricter than a task note: another agent should be able to continue from it without reading chat history.
 
 Machine-readable source:
 
 ```text
 CURRENT_CURSOR.yaml
-```
-
-Protocol reference:
-
-```text
-QPCURSOR.md
 ```
 
 Required fields:
@@ -44,7 +38,7 @@ topology_slice:
   child_nodes:
     -
   changed_edges:
-    - none
+    -
 governance_heat: G0 | G1 | G2 | G3 | G4 | G5
 required_depth: Light | Standard | Precision
 heat_reason:
@@ -72,7 +66,7 @@ allowed_workset:
   sync_after_change:
     -
 forbidden_operations:
-  - sibling_direct_dependency_without_release_transition_exception
+  -
 gates:
   -
 closeout_required: true
@@ -92,16 +86,22 @@ evidence:
 handoff_notes:
 ```
 
-## Rules
+## Heat To Depth
 
-1. A task cannot start if `parent_node` is empty.
-2. A task cannot edit outside `allowed_workset.editable_files` without updating the cursor.
-3. A mode jump must push a new entry into `mode_stack` and declare a return condition in `handoff_notes`.
-4. `status: closed` requires a topology closeout and a ledger row.
-5. `status: blocked` requires `next_action`.
-6. `governance_heat` must be present before implementation.
-7. G2-G3 work requires `Standard`; G4-G5 work requires `Precision`.
-8. Local invariants must be loaded before editing a module.
-9. Interface freeze must say `none` explicitly when no public surface is frozen.
-10. Evidence must name real commands, real manual checks, completed evidence, and pending risks.
-11. Each cursor must explain how the next action grows toward `NORTH_STAR.md`.
+| Heat | Minimum depth |
+| --- | --- |
+| G0-G1 | Light |
+| G2-G3 | Standard |
+| G4-G5 | Precision |
+
+Governance depth may be stronger than the minimum, but it must not be weaker.
+
+## Stop Rules
+
+Stop and update the cursor before acting if:
+
+1. A needed file is outside `allowed_workset.editable_files`.
+2. The task changes API, capability, event schema, persistence schema, route, auth, security, state, lock, or runtime semantics without the correct heat level.
+3. The task needs a sibling direct dependency without an approved release-transition exception.
+4. Evidence cannot be tied to a real command, file, smoke test, manual check, or explicit risk.
+5. The step cannot explain how it grows toward the North Star.

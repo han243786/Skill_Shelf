@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://skill-shelf.local/topological-modular-governance/topology-cursor.schema.json",
-  "title": "Topology Cursor",
+  "$id": "https://skill-shelf.local/topological-modular-governance/qpcursor.schema.json",
+  "title": "QPCursor",
   "type": "object",
   "required": [
     "cursor_version",
@@ -37,33 +37,11 @@
       "enum": ["draft", "claimed", "reading_context", "executing", "evidence_pending", "gate_pending", "handoff_ready", "closed", "blocked"]
     },
     "repo_baseline": { "type": "object" },
-    "mode_stack": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["mode", "step"],
-        "properties": {
-          "mode": {
-            "type": "string",
-            "enum": ["refactor", "advance", "aspect_polish", "doc_debt_cleanup"]
-          },
-          "step": { "type": "string", "minLength": 1 }
-        }
-      }
-    },
+    "mode_stack": { "type": "array", "minItems": 1 },
     "north_star": { "type": "object" },
     "growth_vector": { "type": "object" },
     "scope": { "type": "object" },
-    "topology_slice": {
-      "type": "object",
-      "required": ["parent_node", "child_nodes", "changed_edges"],
-      "properties": {
-        "parent_node": { "type": "string", "minLength": 1 },
-        "child_nodes": { "type": "array", "items": { "type": "string" } },
-        "changed_edges": { "type": "array", "items": { "type": "string" } }
-      }
-    },
+    "topology_slice": { "type": "object" },
     "governance_heat": {
       "type": "string",
       "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
@@ -76,15 +54,7 @@
     "local_invariants": { "type": "object" },
     "interface_freeze": { "type": "object" },
     "anti_regression": { "type": "object" },
-    "allowed_workset": {
-      "type": "object",
-      "required": ["editable_files", "readonly_files", "sync_after_change"],
-      "properties": {
-        "editable_files": { "type": "array", "items": { "type": "string" } },
-        "readonly_files": { "type": "array", "items": { "type": "string" } },
-        "sync_after_change": { "type": "array", "items": { "type": "string" } }
-      }
-    },
+    "allowed_workset": { "type": "object" },
     "forbidden_operations": { "type": "array", "items": { "type": "string" } },
     "gates": { "type": "array", "items": { "type": "string" } },
     "closeout_required": { "type": "boolean" },

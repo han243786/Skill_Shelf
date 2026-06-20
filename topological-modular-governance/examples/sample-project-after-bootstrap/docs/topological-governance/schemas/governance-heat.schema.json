@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-shelf.local/topological-modular-governance/governance-heat.schema.json",
+  "title": "Governance Heat",
+  "type": "object",
+  "required": [
+    "governance_heat",
+    "required_depth",
+    "heat_reason",
+    "upgrade_triggers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "governance_heat": {
+      "type": "string",
+      "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
+    },
+    "required_depth": {
+      "type": "string",
+      "enum": ["Light", "Standard", "Precision"]
+    },
+    "heat_reason": { "type": "string", "minLength": 1 },
+    "upgrade_triggers": { "type": "array", "items": { "type": "string" } }
+  }
+}

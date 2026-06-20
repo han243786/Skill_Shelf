@@ -6,12 +6,20 @@
   "required": [
     "mode",
     "parent",
+    "cursor_id",
+    "north_star_alignment",
+    "convergence_evidence",
+    "governance_heat",
+    "required_depth",
     "nodes_changed",
     "edges_changed",
     "public_surface",
+    "local_invariants",
+    "interface_freeze",
     "full_tree",
     "module_tree",
     "tests_or_smoke",
+    "evidence",
     "old_paths",
     "result",
     "next"
@@ -23,14 +31,28 @@
       "enum": ["refactor", "advance", "aspect_polish", "doc_debt_cleanup"]
     },
     "parent": { "type": "string", "minLength": 1 },
+    "cursor_id": { "type": "string", "minLength": 1 },
+    "north_star_alignment": { "type": "string", "minLength": 1 },
+    "convergence_evidence": { "type": "string", "minLength": 1 },
+    "governance_heat": {
+      "type": "string",
+      "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
+    },
+    "required_depth": {
+      "type": "string",
+      "enum": ["Light", "Standard", "Precision"]
+    },
     "nodes_changed": { "type": "array", "items": { "type": "string" } },
     "edges_changed": { "type": "array", "items": { "type": "string" } },
     "public_surface": { "type": "string", "minLength": 1 },
     "state_or_side_effects": { "type": "string" },
+    "local_invariants": { "type": "string", "minLength": 1 },
+    "interface_freeze": { "type": "string", "minLength": 1 },
     "full_tree": { "type": "string", "minLength": 1 },
     "module_tree": { "type": "string", "minLength": 1 },
     "contracts": { "type": "string" },
     "tests_or_smoke": { "type": "string", "minLength": 1 },
+    "evidence": { "type": "string", "minLength": 1 },
     "old_paths": {
       "type": "string",
       "enum": ["none", "archived", "retired", "debt_open"]

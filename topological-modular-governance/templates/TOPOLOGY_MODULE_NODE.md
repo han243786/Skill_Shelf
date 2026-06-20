@@ -5,6 +5,7 @@ node:
 parent:
 status:
 purpose:
+governance_heat_floor:
 
 inputs:
 - 
@@ -29,6 +30,18 @@ allowed_edges:
 
 forbidden_edges:
 - 
+
+local_invariants:
+-
+
+policy_refs:
+-
+
+heat_escalation:
+-
+
+stop_if:
+-
 
 full_tree_paths:
 - 

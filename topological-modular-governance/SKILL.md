@@ -12,6 +12,7 @@ Use this skill when a project needs to be governed as a module topology instead 
 - Large or expanding projects that need module-network governance.
 - Designing or auditing module trees, full trees, parent-child communication rules, public method ownership, and topology-aware closeout.
 - Separating refactor mode, advance mode, aspect-polish mode, and document-debt cleanup.
+- Applying North Star directional growth, full feature trees, module topology trees, QPCursor handoff, G0-G5 governance heat, and local anti-regression guardrails.
 - Preventing AI-assisted development from drifting across module boundaries.
 - Explaining topological governance to developers or stakeholders in plain language.
 - Combining governance packages with modular refactor execution.
@@ -20,7 +21,7 @@ Use this skill when a project needs to be governed as a module topology instead 
 
 - Small one-off tasks where a simple README or checklist is enough.
 - Pure code movement without governance design; use `modular-refactor`.
-- Full heavy-governance bootstrapping without topology emphasis; use `heavy-scale-exploitation-governance-1`.
+- Recreating heavy process/matrix governance as the default process; this skill is North-Star-first.
 - Release-version performance shortcuts unless the user explicitly declares release transition.
 - Justifying extra ceremony for tiny changes that do not affect nodes, edges, contracts, state, persistence, or public surfaces.
 
@@ -34,16 +35,21 @@ Use this skill when a project needs to be governed as a module topology instead 
 6. Read `references/05-sample-walkthrough.md` when a user wants to see how to start from zero.
 7. Read `references/06-productization-checklist.md` when improving this package or judging whether it is product-like enough.
 8. Read `references/07-paper-topological-modular-governance.md` when the user wants a rigorous paper, methodology defense, governance proposal, or stakeholder explanation.
-9. Use `templates/` when producing user-facing cards or module-node records.
+9. Read `references/08-north-star-directional-growth.md` when creating QPCursors, binding North Star direction, choosing governance heat, or replacing milestone planning.
+10. Read `references/09-local-invariants.md` when binding rules to modules, edges, facets, public surfaces, or gates.
+11. Use `templates/` when producing user-facing cards or module-node records.
 
 ## Non-Negotiable Rules
 
 - Start by naming the work mode before continuing a long-running task.
+- Start governed work from `CURRENT_CURSOR.yaml` when QPCursor governance is active or trialed.
+- Declare `governance_heat` and `required_depth` before implementation.
+- Load local invariants for the active parent module before editing.
 - Treat modules as white-box nodes, not just folders.
 - Treat parent-child communication paths as governed edges.
 - Do not allow sibling-to-sibling links during development unless a developer explicitly declares release-transition performance work and `RELEASE_TRANSITION_EXCEPTION.md` is approved with `developer_approved: true`, a real approver, an explicit `A -> B` edge, performance evidence, review date or expiry, and rollback.
 - Record public method ownership when public methods matter to the change.
-- Keep full tree and module tree separate: physical file map versus logical white-box network.
+- Keep North Star, full feature tree, and module topology tree separate: final-state premise, capability/file facts, and logical white-box network.
 - Do not split large tree files just because they are large; split only when定位速度, gate stability, or reverse lookup reliability is measurably hurt.
 - Closeout must prove topology consistency, not just test success.
 - `status: closed` requires closeout evidence and a matching ledger row; blank closeout results are not acceptable strict-mode evidence.
@@ -54,12 +60,13 @@ Use this skill when a project needs to be governed as a module topology instead 
 2. Bootstrap the target project with `scripts/bootstrap-topological-governance.ps1` when the user wants files installed.
 3. Check the scaffold with `scripts/check-topological-governance.ps1`; use `-Strict` after real fields are filled.
 4. Classify the task mode: `refactor`, `advance`, `aspect_polish`, or `doc_debt_cleanup`.
-5. Identify the affected parent module, child nodes, public methods, state owners, external ports, tests, and docs.
-6. Draw or update the topology slice: nodes, edges, allowed communications, forbidden lateral links, and old/new paths.
-7. Choose the minimum sufficient execution depth: light, standard, or heavy.
-8. Execute or propose changes only inside the declared topology slice.
-9. If another mode is needed, explicitly jump to that mode and record the return condition.
-10. Close out by proving code, module tree, full tree, contracts, tests, docs, and legacy paths agree.
+5. Create or update QPCursor fields: repo baseline, mode stack, North Star, growth vector, scope, governance heat, local invariants, interface freeze, anti-regression, allowed workset, next action, stop rules, and evidence.
+6. Identify the affected parent module, child nodes, public methods, state owners, external ports, tests, and docs.
+7. Draw or update the topology slice: nodes, edges, allowed communications, forbidden lateral links, and old/new paths.
+8. Choose the minimum sufficient execution depth: Light, Standard, or Precision.
+9. Execute or propose changes only inside the declared topology slice and allowed workset.
+10. If another mode is needed, explicitly jump to that mode and record the return condition.
+11. Close out by proving code, North Star alignment, full feature tree, module topology tree, contracts, tests, docs, local invariants, evidence, and legacy paths agree.
 
 ## Work Mode Summary
 
@@ -75,6 +82,8 @@ Use this skill when a project needs to be governed as a module topology instead 
 For planning:
 
 - work mode
+- QPCursor status
+- governance heat and required depth
 - parent boundary
 - affected nodes and edges
 - public methods or ports
@@ -85,9 +94,11 @@ For planning:
 For closeout:
 
 - topology slice changed
+- QPCursor update
+- governance heat and local invariant result
 - public surface result
 - parent-child rule result
-- full tree/module tree sync result
+- North Star/full feature tree/module topology tree sync result
 - tests or smoke result
 - old path status
 - residual risks
@@ -123,6 +134,7 @@ For L4-style checks after project fields are filled:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topological-governance.ps1 -ProjectRoot <project> -Strict
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topology-cursor.ps1 -ProjectRoot <project>
+powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-qpcursor-governance.ps1 -ProjectRoot <project>
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-topology-ledger.ps1 -ProjectRoot <project>
 powershell -NoProfile -ExecutionPolicy Bypass -File <project>\tools\check-forbidden-sibling-edges.ps1 -ProjectRoot <project>
 ```

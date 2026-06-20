@@ -4,24 +4,40 @@
   "title": "Topology Cursor",
   "type": "object",
   "required": [
+    "cursor_version",
     "cursor_id",
     "status",
-    "work_mode_stack",
+    "repo_baseline",
+    "mode_stack",
+    "north_star",
+    "growth_vector",
+    "scope",
     "topology_slice",
+    "governance_heat",
+    "required_depth",
+    "heat_reason",
+    "local_invariants",
+    "interface_freeze",
+    "anti_regression",
     "allowed_workset",
     "forbidden_operations",
     "gates",
     "closeout_required",
-    "next_action"
+    "next_action",
+    "done_when",
+    "stop_if",
+    "evidence"
   ],
   "additionalProperties": false,
   "properties": {
+    "cursor_version": { "type": "string", "minLength": 1 },
     "cursor_id": { "type": "string", "minLength": 1 },
     "status": {
       "type": "string",
-      "enum": ["active", "blocked", "closed", "superseded"]
+      "enum": ["draft", "claimed", "reading_context", "executing", "evidence_pending", "gate_pending", "handoff_ready", "closed", "blocked"]
     },
-    "work_mode_stack": {
+    "repo_baseline": { "type": "object" },
+    "mode_stack": {
       "type": "array",
       "minItems": 1,
       "items": {
@@ -36,6 +52,9 @@
         }
       }
     },
+    "north_star": { "type": "object" },
+    "growth_vector": { "type": "object" },
+    "scope": { "type": "object" },
     "topology_slice": {
       "type": "object",
       "required": ["parent_node", "child_nodes", "changed_edges"],
@@ -45,18 +64,34 @@
         "changed_edges": { "type": "array", "items": { "type": "string" } }
       }
     },
+    "governance_heat": {
+      "type": "string",
+      "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
+    },
+    "required_depth": {
+      "type": "string",
+      "enum": ["Light", "Standard", "Precision"]
+    },
+    "heat_reason": { "type": "string", "minLength": 1 },
+    "local_invariants": { "type": "object" },
+    "interface_freeze": { "type": "object" },
+    "anti_regression": { "type": "object" },
     "allowed_workset": {
       "type": "object",
-      "required": ["editable_files", "readonly_files"],
+      "required": ["editable_files", "readonly_files", "sync_after_change"],
       "properties": {
         "editable_files": { "type": "array", "items": { "type": "string" } },
-        "readonly_files": { "type": "array", "items": { "type": "string" } }
+        "readonly_files": { "type": "array", "items": { "type": "string" } },
+        "sync_after_change": { "type": "array", "items": { "type": "string" } }
       }
     },
     "forbidden_operations": { "type": "array", "items": { "type": "string" } },
     "gates": { "type": "array", "items": { "type": "string" } },
     "closeout_required": { "type": "boolean" },
     "next_action": { "type": "string", "minLength": 1 },
+    "done_when": { "type": "string", "minLength": 1 },
+    "stop_if": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "object" },
     "handoff_notes": { "type": "string" }
   }
 }

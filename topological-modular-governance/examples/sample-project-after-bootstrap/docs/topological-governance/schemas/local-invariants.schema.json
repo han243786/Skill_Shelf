@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-shelf.local/topological-modular-governance/local-invariants.schema.json",
+  "title": "Local Invariants",
+  "type": "object",
+  "required": [
+    "module",
+    "scope",
+    "public_surface",
+    "allowed_edges",
+    "forbidden_edges",
+    "local_invariants",
+    "north_star_refs",
+    "heat_escalation",
+    "stop_if",
+    "gates"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "module": { "type": "string", "minLength": 1 },
+    "scope": { "type": "object" },
+    "public_surface": { "type": "array", "items": { "type": "string" } },
+    "allowed_edges": { "type": "array", "items": { "type": "string" } },
+    "forbidden_edges": { "type": "array", "items": { "type": "string" } },
+    "local_invariants": { "type": "array", "items": { "type": "string" } },
+    "north_star_refs": { "type": "array", "items": { "type": "string" } },
+    "heat_escalation": { "type": "array", "items": { "type": "string" } },
+    "stop_if": { "type": "array", "items": { "type": "string" } },
+    "gates": { "type": "array", "items": { "type": "string" } }
+  }
+}

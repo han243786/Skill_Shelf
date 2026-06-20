@@ -7,11 +7,17 @@
     "work_mode",
     "reason",
     "allowed_scope",
+    "north_star_alignment",
+    "growth_vector",
+    "governance_heat",
+    "required_depth",
+    "heat_reason",
     "parent_node",
     "changed_edges",
     "gates",
     "exit_gate",
-    "rollback"
+    "rollback",
+    "stop_if"
   ],
   "additionalProperties": false,
   "properties": {
@@ -25,6 +31,17 @@
       "minItems": 1,
       "items": { "type": "string", "minLength": 1 }
     },
+    "north_star_alignment": { "type": "string", "minLength": 1 },
+    "growth_vector": { "type": "string", "minLength": 1 },
+    "governance_heat": {
+      "type": "string",
+      "enum": ["G0", "G1", "G2", "G3", "G4", "G5"]
+    },
+    "required_depth": {
+      "type": "string",
+      "enum": ["Light", "Standard", "Precision"]
+    },
+    "heat_reason": { "type": "string", "minLength": 1 },
     "parent_node": { "type": "string", "minLength": 1 },
     "affected_child_nodes": {
       "type": "array",
@@ -43,6 +60,8 @@
       "type": "string",
       "enum": ["none", "read_only", "state_changed", "persistence_changed", "external_io_changed", "security_changed"]
     },
+    "interface_freeze": { "type": "string" },
+    "local_invariants": { "type": "string", "minLength": 1 },
     "full_tree_paths": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
@@ -61,6 +80,7 @@
       "items": { "type": "string", "minLength": 1 }
     },
     "exit_gate": { "type": "string", "minLength": 1 },
-    "rollback": { "type": "string", "minLength": 1 }
+    "rollback": { "type": "string", "minLength": 1 },
+    "stop_if": { "type": "string", "minLength": 1 }
   }
 }

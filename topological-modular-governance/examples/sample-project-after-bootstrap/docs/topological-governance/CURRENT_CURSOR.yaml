@@ -1,24 +1,80 @@
+cursor_version: "qpcursor-v1"
 cursor_id: "CURSOR-0001"
-status: active
-work_mode_stack:
+status: closed
+repo_baseline:
+  branch: "sample"
+  commit: "sample-baseline"
+  growth_position: "sample route facade closeout"
+mode_stack:
   - mode: refactor
-    step: "sample backend route facade closeout"
+    step: "RM.R7_route_facade_regression"
+north_star:
+  source: "docs/topological-governance/NORTH_STAR.md"
+  alignment: "sample backend routes grow through the parent facade"
+growth_vector:
+  current_position: "sample.backend.routes closed through parent facade"
+  next_growth: "advance to sample.backend.state topology slice"
+  convergence_signal: "route feature tree node and sample.backend topology node agree"
+scope:
+  user_function_facet: "sample.backend.routes"
+  full_feature_tree: "src/backend"
+  module_tree: "sample.backend.routes"
+  leaf: "src/backend/README.md"
 topology_slice:
   parent_node: "sample.backend"
   child_nodes:
     - "sample.backend.routes"
   changed_edges:
     - "routes enter through sample.backend facade"
+governance_heat: G2
+required_depth: Standard
+heat_reason: "sample route facade changes a parent-child module edge and needs topology evidence"
+local_invariants:
+  module: "sample.backend"
+  source: "docs/topological-governance/LOCAL_INVARIANTS.md"
+interface_freeze:
+  api: "unchanged"
+  capability: "none"
+  event_schema: "none"
+  persistence_schema: "none"
+  ui_route: "none"
+anti_regression:
+  protected_behaviors:
+    - "sample route smoke passed"
+  protected_interfaces:
+    - "sample backend route facade"
+  protected_tree_paths:
+    - "docs/topological-governance/NORTH_STAR.md"
+    - "docs/topological-governance/FULL_FEATURE_TREE.md"
+    - "docs/topological-governance/PROJECT_TOPOLOGY.md"
 allowed_workset:
   editable_files:
     - "docs/topological-governance"
     - "src/backend"
   readonly_files:
     - "src"
+  sync_after_change:
+    - "docs/topological-governance/TOPOLOGY_CLOSEOUT.md"
+    - "docs/topological-governance/topology-ledger.ndjson"
 forbidden_operations:
   - "sibling_direct_dependency_without_release_transition_exception"
+  - "scope_expansion_without_cursor_update"
 gates:
   - "manual: sample route smoke passed"
 closeout_required: true
 next_action: "advance to sample.backend.state topology slice"
-handoff_notes: "Sample cursor for strict check."
+done_when: "sample.backend is listed in PROJECT_TOPOLOGY.md, local invariants are loaded, and closeout evidence is present"
+stop_if:
+  - "route facade work requires a new public API"
+  - "sample.backend is not listed as parent_node"
+evidence:
+  required_commands:
+    - "scripts/check-topological-governance.ps1 -ProjectRoot examples/sample-project-after-bootstrap -Strict"
+    - "scripts/check-qpcursor-governance.ps1 -ProjectRoot examples/sample-project-after-bootstrap"
+  manual_checks:
+    - "sample route smoke passed"
+  completed:
+    - "TOPOLOGY_CLOSEOUT.md result is closed and ledger contains CURSOR-0001"
+  pending_risks:
+    - "sample only; replace with project-specific smoke before production"
+handoff_notes: "Sample QPCursor for strict check."

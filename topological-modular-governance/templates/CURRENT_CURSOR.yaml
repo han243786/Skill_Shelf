@@ -1,19 +1,60 @@
+cursor_version: "qpcursor-v1"
 cursor_id: "CURSOR-0001"
-status: active
-work_mode_stack:
+status: claimed
+repo_baseline:
+  branch: "unknown"
+  commit: "unknown"
+  growth_position: "bootstrap"
+mode_stack:
   - mode: refactor
-    step: "fill-first-real-topology-slice"
+    step: "RM.R0_scope_topology_slice"
+north_star:
+  source: "docs/topological-governance/NORTH_STAR.md"
+  alignment: "bootstrap first real topology slice"
+growth_vector:
+  current_position: "sample topology placeholders"
+  next_growth: "replace sample values with real project facts"
+  convergence_signal: "first parent node, feature tree node, and topology node are aligned"
+scope:
+  user_function_facet: "sample.bootstrap"
+  full_feature_tree: "docs/topological-governance"
+  module_tree: "sample.parent"
+  leaf: "docs/topological-governance/PROJECT_TOPOLOGY.md"
 topology_slice:
   parent_node: "sample.parent"
   child_nodes:
     - "sample.parent.child"
   changed_edges:
     - "none"
+governance_heat: G1
+required_depth: Light
+heat_reason: "bootstrap topology mapping only; no public surface, state, persistence, or runtime semantic change"
+local_invariants:
+  module: "sample.parent"
+  source: "docs/topological-governance/LOCAL_INVARIANTS.md"
+interface_freeze:
+  api: "none"
+  capability: "none"
+  event_schema: "none"
+  persistence_schema: "none"
+  ui_route: "none"
+anti_regression:
+  protected_behaviors:
+    - "none during bootstrap"
+  protected_interfaces:
+    - "none during bootstrap"
+  protected_tree_paths:
+    - "docs/topological-governance/NORTH_STAR.md"
+    - "docs/topological-governance/FULL_FEATURE_TREE.md"
+    - "docs/topological-governance/PROJECT_TOPOLOGY.md"
 allowed_workset:
   editable_files:
     - "docs/topological-governance/PROJECT_TOPOLOGY.md"
+    - "docs/topological-governance/CURRENT_CURSOR.yaml"
   readonly_files:
     - "src"
+  sync_after_change:
+    - "docs/topological-governance/TOPOLOGY_CLOSEOUT.md"
 forbidden_operations:
   - "sibling_direct_dependency_without_release_transition_exception"
   - "scope_expansion_without_cursor_update"
@@ -21,4 +62,18 @@ gates:
   - "manual: fill first parent node and run check-topological-governance.ps1"
 closeout_required: true
 next_action: "replace sample values with the first real project topology slice"
+done_when: "parent_node exists in PROJECT_TOPOLOGY.md and required governance checks pass"
+stop_if:
+  - "parent_node cannot be mapped to a real topology row"
+  - "work requires G2 or higher heat before local invariants are filled"
+evidence:
+  required_commands:
+    - "tools/check-topological-governance.ps1 -ProjectRoot ."
+    - "tools/check-qpcursor-governance.ps1 -ProjectRoot ."
+  manual_checks:
+    - "confirm the first parent node and local invariants are real project facts"
+  completed:
+    - "none"
+  pending_risks:
+    - "bootstrap placeholders must be replaced before operational use"
 handoff_notes: "This cursor is the single current task coordinate. Update it at every closeout."

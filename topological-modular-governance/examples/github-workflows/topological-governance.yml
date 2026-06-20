@@ -20,6 +20,10 @@ jobs:
         shell: pwsh
         run: tools/check-topology-cursor.ps1 -ProjectRoot .
 
+      - name: Check QPCursor governance
+        shell: pwsh
+        run: tools/check-qpcursor-governance.ps1 -ProjectRoot .
+
       - name: Check topology ledger
         shell: pwsh
         run: tools/check-topology-ledger.ps1 -ProjectRoot .

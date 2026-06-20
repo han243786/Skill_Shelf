@@ -8,13 +8,18 @@
 
 ```text
 work_mode:
+cursor_id:
+governance_heat:
+required_depth:
 changed_nodes:
 changed_edges:
 public_surface:
+local_invariants:
 parent_child_rule:
 full_tree_sync:
 module_tree_sync:
 tests_or_smoke:
+evidence:
 legacy_paths:
 residual_risk:
 next_cursor:
@@ -27,13 +32,15 @@ next_cursor:
 | 格式 / lint | 基础代码质量没有退 |
 | 单元测试 | 叶子行为没有退 |
 | 集成测试 / smoke | 父级边界仍能跑通 |
-| 全量树检查 | active 文件和文档地图一致 |
-| 模块树检查 | 逻辑节点、public owner、父子边没有漂移 |
+| 北极星对齐检查 | 本轮结果仍朝最终状态收敛，没有把新缺口伪装成完成态 |
+| 功能树/全量树检查 | active 文件、能力事实和文档地图一致 |
+| 模块树/拓扑树检查 | 逻辑节点、public owner、父子边没有漂移 |
 | 旧路径检查 | 文档没有继续指向已不存在的旧事实 |
 | API / schema 检查 | 外部契约没有隐式破坏 |
 | Cursor 拓扑检查 | 当前游标的 `parent_node` 必须存在于项目拓扑图 |
 | Ledger 检查 | 运行态 closeout 必须留下非空 ledger 记录 |
 | Release-transition 例外检查 | 横向直连必须有开发者授权、性能证据、review/expiry 和 rollback |
+| QPCursor governance 检查 | 北极星、功能树、拓扑树、热度、局部不变量、强度映射和 evidence 必须完整 |
 
 ## 3. AI 幻觉发现点
 
@@ -62,7 +69,7 @@ next_cursor:
 
 | 类型 | 处理方式 |
 | --- | --- |
-| 热资产 | 模块树、全量树、当前契约、工作模式路由、质量护栏 |
+| 热资产 | 北极星、功能树/全量树、模块树/拓扑树、当前契约、工作模式路由、局部防回退护栏 |
 | 冷文档 | 历史路线、旧状态总表、长篇背景手册 |
 | 旧路径债 | 单独批次清理，不混入功能推进 |
 
@@ -80,6 +87,8 @@ next_cursor:
 ```text
 topology_closeout:
   mode:
+  north_star_alignment:
+  growth_vector:
   parent:
   nodes_changed:
   edges_changed:

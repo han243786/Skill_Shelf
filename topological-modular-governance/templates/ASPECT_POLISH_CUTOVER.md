@@ -37,5 +37,5 @@ aspect_polish_cutover:
 
 1. Do not cut over while the mirror cannot run independently.
 2. Do not retire old paths until `cutover_gate` passes.
-3. Shared writable state forces heavy mode.
+3. Shared writable state forces at least G4 / Precision.
 4. Missing rollback blocks cutover.

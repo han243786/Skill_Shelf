@@ -21,14 +21,48 @@ Before any implementation, choose one work mode:
 - aspect_polish
 - doc_debt_cleanup
 
+Then create or update the QPCursor:
+- cursor_version
+- cursor_id
+- status
+- repo_baseline
+- mode_stack
+- north_star
+- growth_vector
+- scope
+- topology_slice
+- governance_heat
+- required_depth
+- local_invariants
+- interface_freeze
+- anti_regression
+- allowed_workset
+- next_action
+- evidence
+
+Classify governance heat before coding:
+- G0-G1 -> Light
+- G2-G3 -> Standard
+- G4-G5 -> Precision
+
+Load local invariants for the active parent module before editing files.
+
+Treat development as directional growth toward `NORTH_STAR.md`.
+Do not create milestones as the default planning unit.
+Do not replace the North Star with process policy or fine-grained operating rituals.
+
 For every task, produce a topology task card:
 - work_mode
 - reason
 - allowed_scope
+- governance_heat
+- required_depth
 - parent_node
 - affected_child_nodes
 - changed_edges
 - public_methods_or_ports
+- local_invariants
+- north_star_alignment
 - full_tree_paths
 - module_tree_nodes
 - gates
@@ -47,11 +81,15 @@ At closeout, prove topology consistency:
 - tests or smoke
 - old path status
 - residual risk
+- cursor update
 
 Stop immediately and ask for a mode or scope update if:
 - parent_node cannot be found
 - allowed_scope is empty
 - requested file is outside allowed_scope
+- governance_heat is missing
+- north_star or growth_vector is missing
+- local invariants are missing for the active parent module
 - the task touches API, schema, event, capability, command, security, state, persistence, locks, auth, or public UI surface without the correct mode or upgrade
 - the task would introduce sibling-to-sibling direct dependency
 - release-transition performance exception is needed but not explicitly approved by the developer

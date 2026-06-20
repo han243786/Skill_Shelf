@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-shelf.local/topological-modular-governance/north-star.schema.json",
+  "title": "North Star",
+  "type": "object",
+  "required": [
+    "north_star",
+    "current_position",
+    "growth_direction",
+    "anti_regression",
+    "convergence_evidence",
+    "clarity_log"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "north_star": { "type": "object" },
+    "current_position": { "type": "object" },
+    "growth_direction": { "type": "object" },
+    "anti_regression": { "type": "object" },
+    "convergence_evidence": { "type": "object" },
+    "clarity_log": { "type": "array", "items": { "type": "string" } }
+  }
+}

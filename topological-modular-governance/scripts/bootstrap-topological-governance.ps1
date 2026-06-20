@@ -24,6 +24,11 @@ $templateMappings = @(
     @{ Source = "TOPOLOGY_TASK_CARD.md"; Dest = "$GovernanceRoot\TOPOLOGY_TASK_CARD.md" },
     @{ Source = "TOPOLOGY_MODULE_NODE.md"; Dest = "$GovernanceRoot\TOPOLOGY_MODULE_NODE.md" },
     @{ Source = "TOPOLOGY_CLOSEOUT.md"; Dest = "$GovernanceRoot\TOPOLOGY_CLOSEOUT.md" },
+    @{ Source = "QPCURSOR.md"; Dest = "$GovernanceRoot\QPCURSOR.md" },
+    @{ Source = "NORTH_STAR.md"; Dest = "$GovernanceRoot\NORTH_STAR.md" },
+    @{ Source = "FULL_FEATURE_TREE.md"; Dest = "$GovernanceRoot\FULL_FEATURE_TREE.md" },
+    @{ Source = "GOVERNANCE_HEAT.md"; Dest = "$GovernanceRoot\GOVERNANCE_HEAT.md" },
+    @{ Source = "LOCAL_INVARIANTS.md"; Dest = "$GovernanceRoot\LOCAL_INVARIANTS.md" },
     @{ Source = "AI_START_PROMPT.md"; Dest = "$GovernanceRoot\AI_START_PROMPT.md" },
     @{ Source = "CURRENT_CURSOR.yaml"; Dest = "$GovernanceRoot\CURRENT_CURSOR.yaml" },
     @{ Source = "TOPOLOGY_CURSOR.md"; Dest = "$GovernanceRoot\TOPOLOGY_CURSOR.md" },
@@ -35,6 +40,7 @@ $scriptMappings = @(
     @{ Source = (Join-Path $PSScriptRoot "check-topological-governance.ps1"); Dest = "tools\check-topological-governance.ps1" },
     @{ Source = (Join-Path $PSScriptRoot "inventory-topology.ps1"); Dest = "tools\inventory-topology.ps1" },
     @{ Source = (Join-Path $PSScriptRoot "check-topology-cursor.ps1"); Dest = "tools\check-topology-cursor.ps1" },
+    @{ Source = (Join-Path $PSScriptRoot "check-qpcursor-governance.ps1"); Dest = "tools\check-qpcursor-governance.ps1" },
     @{ Source = (Join-Path $PSScriptRoot "check-topology-ledger.ps1"); Dest = "tools\check-topology-ledger.ps1" },
     @{ Source = (Join-Path $PSScriptRoot "check-forbidden-sibling-edges.ps1"); Dest = "tools\check-forbidden-sibling-edges.ps1" }
 )
@@ -44,7 +50,12 @@ $schemaMappings = @(
     @{ Source = "topology-task-card.schema.json"; Dest = "$GovernanceRoot\schemas\topology-task-card.schema.json" },
     @{ Source = "topology-module-node.schema.json"; Dest = "$GovernanceRoot\schemas\topology-module-node.schema.json" },
     @{ Source = "topology-closeout.schema.json"; Dest = "$GovernanceRoot\schemas\topology-closeout.schema.json" },
-    @{ Source = "topology-cursor.schema.json"; Dest = "$GovernanceRoot\schemas\topology-cursor.schema.json" }
+    @{ Source = "topology-cursor.schema.json"; Dest = "$GovernanceRoot\schemas\topology-cursor.schema.json" },
+    @{ Source = "qpcursor.schema.json"; Dest = "$GovernanceRoot\schemas\qpcursor.schema.json" },
+    @{ Source = "north-star.schema.json"; Dest = "$GovernanceRoot\schemas\north-star.schema.json" },
+    @{ Source = "full-feature-tree.schema.json"; Dest = "$GovernanceRoot\schemas\full-feature-tree.schema.json" },
+    @{ Source = "governance-heat.schema.json"; Dest = "$GovernanceRoot\schemas\governance-heat.schema.json" },
+    @{ Source = "local-invariants.schema.json"; Dest = "$GovernanceRoot\schemas\local-invariants.schema.json" }
 )
 
 function Copy-TopologyFile {

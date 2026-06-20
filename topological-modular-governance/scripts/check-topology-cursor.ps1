@@ -65,7 +65,32 @@ if (-not (Test-Path -LiteralPath $path)) {
     Add-Issue "missing cursor: $CursorPath"
 } else {
     $text = Get-Content -Encoding UTF8 -LiteralPath $path -Raw
-    foreach ($field in @("cursor_id", "status", "work_mode_stack", "topology_slice", "parent_node", "allowed_workset", "forbidden_operations", "gates", "closeout_required", "next_action")) {
+    foreach ($field in @(
+        "cursor_version",
+        "cursor_id",
+        "status",
+        "repo_baseline",
+        "mode_stack",
+        "north_star",
+        "growth_vector",
+        "scope",
+        "topology_slice",
+        "parent_node",
+        "governance_heat",
+        "required_depth",
+        "heat_reason",
+        "local_invariants",
+        "interface_freeze",
+        "anti_regression",
+        "allowed_workset",
+        "forbidden_operations",
+        "gates",
+        "closeout_required",
+        "next_action",
+        "done_when",
+        "stop_if",
+        "evidence"
+    )) {
         if ($text -notmatch "(?m)^\s*$([regex]::Escape($field))\s*:") {
             Add-Issue "cursor missing field: $field"
         }
@@ -73,8 +98,18 @@ if (-not (Test-Path -LiteralPath $path)) {
 
     $cursorId = Get-ScalarField -Text $text -Name "cursor_id"
     $status = Get-ScalarField -Text $text -Name "status"
-    if ($status -ne "" -and $status -notin @("active", "blocked", "closed", "superseded")) {
-        Add-Issue "cursor status must be active / blocked / closed / superseded"
+    if ($status -ne "" -and $status -notin @("draft", "claimed", "reading_context", "executing", "evidence_pending", "gate_pending", "handoff_ready", "closed", "blocked")) {
+        Add-Issue "cursor status must be draft / claimed / reading_context / executing / evidence_pending / gate_pending / handoff_ready / closed / blocked"
+    }
+
+    $heat = Get-ScalarField -Text $text -Name "governance_heat"
+    if ($heat -ne "" -and $heat -notin @("G0", "G1", "G2", "G3", "G4", "G5")) {
+        Add-Issue "cursor governance_heat must be G0 / G1 / G2 / G3 / G4 / G5"
+    }
+
+    $depth = Get-ScalarField -Text $text -Name "required_depth"
+    if ($depth -ne "" -and $depth -notin @("Light", "Standard", "Precision")) {
+        Add-Issue "cursor required_depth must be Light / Standard / Precision"
     }
 
     $parent = Get-ScalarField -Text $text -Name "parent_node"
